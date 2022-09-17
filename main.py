@@ -1,7 +1,7 @@
 import os
+import configparser
 
 from fastapi import FastAPI
-import configparser
 
 config = configparser.ConfigParser()
 if not os.path.isfile("config.ini"):
