@@ -1,34 +1,50 @@
-import sqlite3
+import configparser
+import pickle
 import os
 
 
-if not __name__ == '__main__':
-    if not os.path.isfile("users.db"):  # initializing the database if it doesn't exist
-        _conn = sqlite3.connect("users.db")
-        _cursor = _conn.cursor()
-        _cursor.execute("CREATE TABLE IF NOT EXISTS users(STRING username, INTEGER kills, INTEGER deaths)")
-        _conn.commit()
-        _conn.close()
+DATABASEFILE = "db.pkl"
 
 
-def get_user_data(username: str) -> tuple | None:
-    conn = sqlite3.connect("users.db")
-    cursor = conn.cursor()
-    cursor.execute("""SELECT * FROM users WHERE username = ?""", (username,))
-    selection = cursor.fetchone()
-    return selection
+class Player:
+    def __init__(self, username: str, kills: int, deaths: int, used_weapons: list, used_units: list):
+        self.name = username
+        self.kills = kills
+        self.deaths = deaths
+        self.used_weapons = used_weapons
+        self.used_units = used_units
 
 
-def save_user_data(username: str, data: tuple[int, int]) -> None:
-    conn = sqlite3.connect("users.db")
-    cursor = conn.cursor()
-    cursor.execute("SELECT * FROM users WHERE username = ?", username)
-    fetched = cursor.fetchone()
-    if fetched != () and fetched is not None:
-        _, kills, deaths = fetched
-        kills += data[0]
-        deaths += data[1]
-        final_data = (_, kills, deaths)
+def _load_data(filename):
+    if not os.path.exists(filename):
+        return {}
     else:
-        final_data = (username, data[0], data[1])
-    cursor.execute("INSERT INTO users WHERE username = ? VALUES(?)", final_data)
+        with open(filename, "rb") as f:
+            return pickle.load(f)
+
+
+def get_user_data(username: str):
+    data = _load_data(DATABASEFILE)
+    user_data = data.get(username)
+    if user_data is not None:
+        return user_data
+    else:
+        return Player(username, 0, 0, list(), list())
+
+
+def save_user_data(player_data: Player):
+    data = _load_data(DATABASEFILE)
+    data[player_data.name] = player_data
+    with open(DATABASEFILE, "wb") as f:
+        pickle.dump(data, f)
+
+
+def load_config():
+    config = configparser.ConfigParser()
+    if not os.path.isfile("config.ini"):
+        config["DEFAULT"] = {
+            "name": "DCS Server"
+        }
+    else:
+        config.read("config.ini")
+    return config

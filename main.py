@@ -3,14 +3,9 @@ import configparser
 
 from fastapi import FastAPI
 
-config = configparser.ConfigParser()
-if not os.path.isfile("config.ini"):
-    config["DEFAULT"] = {
-        "name": "DCS Server",
-        "server_path": "C:/"
-    }
-else:
-    config.read("config.ini")
+from utils import load_config
+
+config = load_config()
 
 app = FastAPI(title=f"DCS Server {config['DEFAULT']['name']}")
 
