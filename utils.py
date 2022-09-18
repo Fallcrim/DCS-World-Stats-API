@@ -7,12 +7,14 @@ DATABASEFILE = "db.pkl"
 
 
 class Player:
-    def __init__(self, username: str, kills: int, deaths: int, used_weapons: list, used_units: list):
+    def __init__(self, username: str, kills: int, deaths: int, ejections: int, used_weapons: list, used_units: list, sides_as_killer: list):
         self.name = username
         self.kills = kills
         self.deaths = deaths
         self.used_weapons = used_weapons
         self.used_units = used_units
+        self.sides_as_killer = sides_as_killer
+        self.ejections = ejections
 
 
 def _load_data(filename):
@@ -29,7 +31,7 @@ def get_user_data(username: str):
     if user_data is not None:
         return user_data
     else:
-        return Player(username, 0, 0, list(), list())
+        return Player(username, 0, 0, list(), list(), list())
 
 
 def save_user_data(player_data: Player):

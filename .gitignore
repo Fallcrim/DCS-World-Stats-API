@@ -1,0 +1,6 @@
+venv/*
+*.ini
+.idea/*
+*.pkl
+*.pickle
+*.pickl
