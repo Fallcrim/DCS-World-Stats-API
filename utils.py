@@ -31,7 +31,7 @@ def get_user_data(username: str):
     if user_data is not None:
         return user_data
     else:
-        return Player(username, 0, 0, list(), list(), list())
+        return Player(username, 0, 0, 0, list(), list(), list())
 
 
 def save_user_data(player_data: Player):
