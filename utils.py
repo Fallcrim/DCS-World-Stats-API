@@ -35,6 +35,8 @@ def get_user_data(username: str):
 
 
 def save_user_data(player_data: Player):
+    if player_data.name == "null":
+        return
     data = _load_data(DATABASEFILE)
     data[player_data.name] = player_data
     with open(DATABASEFILE, "wb") as f:
@@ -50,3 +52,28 @@ def load_config():
     else:
         config.read("config.ini")
     return config
+
+
+def get_leaderboard_kills(limit: int = 10):
+    data = _load_data(DATABASEFILE)
+    unsorted = [(user.name, user.kills) for user in list(data.values())[:limit]]
+    sorted_lb = sorted(unsorted, key=lambda tup: tup[1], reverse=True)
+    sorted_lb_dict = {username: killCount for username, killCount in sorted_lb}
+    return sorted_lb_dict
+
+
+def get_leaderboard_deaths(limit: int = 10):
+    data = _load_data(DATABASEFILE)
+    unsorted = [(user.name, user.deaths) for user in list(data.values())[:limit]]
+    sorted_lb = sorted(unsorted, key=lambda tup: tup[1], reverse=True)
+    sorted_lb_dict = {username: killCount for username, killCount in sorted_lb}
+    return sorted_lb_dict
+
+
+def get_leaderboard_ejections(limit: int = 10):
+    data = _load_data(DATABASEFILE)
+    unsorted = [(user.name, user.ejections) for user in list(data.values())[:limit]]
+    sorted_lb = sorted(unsorted, key=lambda tup: tup[1], reverse=True)
+    sorted_lb_dict = {username: killCount for username, killCount in sorted_lb}
+    return sorted_lb_dict
+

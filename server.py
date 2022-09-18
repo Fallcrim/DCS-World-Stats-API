@@ -39,4 +39,8 @@ def run():
 
         if data.get("eventName") == "simulationEnded":
             app_running = False
-    logging.info("Stopping event handler")
+
+        if data.get("eventName") == "pilot_death":
+            player = get_user_data(data.get("playerName"))
+            player.deaths += 1
+            save_user_data(player)
