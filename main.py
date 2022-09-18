@@ -1,13 +1,14 @@
-import os
-import configparser
+import threading
 
 from fastapi import FastAPI
 
 from utils import load_config
+from server import run
 
 config = load_config()
 
 app = FastAPI(title=f"DCS Server {config['DEFAULT']['name']}")
+threading.Thread(target=run).start()
 
 
 @app.get("/")
