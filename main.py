@@ -2,7 +2,7 @@ import threading
 
 from fastapi import FastAPI
 
-from utils import load_config
+from utils import load_config, get_user_data
 from server import run
 
 config = load_config()
@@ -18,4 +18,4 @@ async def root():
 
 @app.get("/players/{player_name}")
 async def return_player_data(player_name: str):
-    return {}
+    return get_user_data(player_name).__dict__

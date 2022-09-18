@@ -1,5 +1,6 @@
 import socket
 import json
+import logging
 
 from utils import save_user_data, get_user_data
 
@@ -38,3 +39,4 @@ def run():
 
         if data.get("eventName") == "simulationEnded":
             app_running = False
+    logging.info("Stopping event handler")
