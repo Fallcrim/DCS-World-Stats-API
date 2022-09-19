@@ -1,6 +1,7 @@
 import threading
 
 from fastapi import FastAPI
+from fastapi.responses import HTMLResponse
 
 from utils import load_config, get_user_data, get_leaderboard_kills, get_leaderboard_ejections, get_leaderboard_deaths
 from server import run
@@ -11,9 +12,9 @@ app = FastAPI(title=f"DCS Server {config['DEFAULT']['name']}")
 threading.Thread(target=run).start()
 
 
-@app.get("/")
+@app.get("/", response_class=HTMLResponse)
 async def root():
-    return {"message": "This is the DCS World Stats API!"}
+    return open("html/index.html").read()
 
 
 @app.get("/players/{player_name}")
