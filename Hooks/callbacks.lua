@@ -31,11 +31,17 @@ function test.onGameEvent(eventName, arg1, arg2, arg3, arg4, arg5, arg6, arg7)
 
     elseif eventName == "pilot_death" then
         tbl.playerName = net.get_name(arg1)
+
+    elseif eventName == "takeoff" then
+        tbl.playerName = net.get_name(arg1)
+
+    elseif eventName == "landing" then
+        tbl.playerName = net.get_name(arg1)
     end
 
     local data = JSON:encode(tbl)
 	conn:sendto(tostring(data), "127.0.0.1", 12000)
-    log.write("SCRIPT", log.INFO, "Sent game event: "..eventName)
+    log.write("API HOOK", log.INFO, "Sent game event: "..eventName)
 end
 
 function test.onSimulationEnd()
