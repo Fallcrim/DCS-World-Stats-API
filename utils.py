@@ -15,6 +15,18 @@ class Player:
         self.used_units = used_units
         self.sides_as_killer = sides_as_killer
         self.ejections = ejections
+        self._score = 0
+        self.kd = kills / deaths
+        self.takeoffs = 0
+        self.landings = 0
+
+    @property
+    def score(self):
+        return self._score
+
+    def update_score(self):
+        self._score = self.kills * 2 - self.deaths
+        self.kd = round(self.kills / self.deaths, 2)
 
 
 def _load_data(filename):

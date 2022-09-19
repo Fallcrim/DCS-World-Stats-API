@@ -43,4 +43,5 @@ def run():
         if data.get("eventName") == "pilot_death":
             player = get_user_data(data.get("playerName"))
             player.deaths += 1
+            player.update_score()
             save_user_data(player)
