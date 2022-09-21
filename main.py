@@ -3,7 +3,7 @@ import threading
 from fastapi import FastAPI
 from fastapi.responses import HTMLResponse
 
-from utils import load_config, get_user_data, get_leaderboard_kills, get_leaderboard_ejections, get_leaderboard_deaths, get_leaderboard_weapons
+from utils import *
 from server import run
 
 config = load_config()
@@ -35,3 +35,14 @@ async def return_leaderboard_data(leaderboard_name: str, limit: int):
 
     if leaderboard_name == "weapons":
         return get_leaderboard_weapons(limit)
+
+    if leaderboard_name == "kd":
+        return get_leaderboard_kd(limit)
+
+    if leaderboard_name == "score":
+        return get_leaderboard_score(limit)
+
+
+@app.get("/sides")
+async def return_side_kills():
+    return get_leaderboard_both_sides()

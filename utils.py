@@ -2,12 +2,12 @@ import configparser
 import pickle
 import os
 
-
 DATABASEFILE = "db.pkl"
 
 
 class Player:
-    def __init__(self, username: str, kills: int, deaths: int, ejections: int, used_weapons: list, used_units: list, sides_as_killer: list):
+    def __init__(self, username: str, kills: int, deaths: int, ejections: int, used_weapons: list, used_units: list,
+                 sides_as_killer: list):
         self.name = username
         self.kills = kills
         self.deaths = deaths
@@ -38,6 +38,8 @@ def _load_data(filename):
 
 
 def get_user_data(username: str):
+    if username == "null":
+        return dict()
     data = _load_data(DATABASEFILE)
     user_data = data.get(username)
     if user_data is not None:
@@ -78,7 +80,7 @@ def get_leaderboard_deaths(limit: int = 10):
     data = _load_data(DATABASEFILE)
     unsorted = [(user.name, user.deaths) for user in list(data.values())[:limit]]
     sorted_lb = sorted(unsorted, key=lambda tup: tup[1], reverse=True)
-    sorted_lb_dict = {username: killCount for username, killCount in sorted_lb}
+    sorted_lb_dict = {username: deathCount for username, deathCount in sorted_lb}
     return sorted_lb_dict
 
 
@@ -86,7 +88,7 @@ def get_leaderboard_ejections(limit: int = 10):
     data = _load_data(DATABASEFILE)
     unsorted = [(user.name, user.ejections) for user in list(data.values())[:limit]]
     sorted_lb = sorted(unsorted, key=lambda tup: tup[1], reverse=True)
-    sorted_lb_dict = {username: killCount for username, killCount in sorted_lb}
+    sorted_lb_dict = {username: ejectCount for username, ejectCount in sorted_lb}
     return sorted_lb_dict
 
 
@@ -100,6 +102,37 @@ def get_leaderboard_weapons(limit: int = 10):
             else:
                 weapon_scores[weapon] += 1
     unsorted = [(wpn_name, wpn_kills) for wpn_name, wpn_kills in list(weapon_scores.items())[:limit]]
-    sorted_lb = sorted_lb = sorted(unsorted, key=lambda tup: tup[1], reverse=True)
+    sorted_lb = sorted(unsorted, key=lambda tup: tup[1], reverse=True)
+    leaderboard = dict(sorted_lb)
+    return leaderboard
+
+
+def get_leaderboard_kd(limit: int = 10):
+    data = _load_data(DATABASEFILE)
+    unsorted = [(user.name, user.kd) for user in list(data.values())[:limit]]
+    sorted_lb = sorted(unsorted, key=lambda tup: tup[1], reverse=True)
+    sorted_lb_dict = {username: kd for username, kd in sorted_lb}
+    return sorted_lb_dict
+
+
+def get_leaderboard_score(limit: int = 10):
+    data = _load_data(DATABASEFILE)
+    unsorted = [(user.name, user.kd) for user in list(data.values())[:limit]]
+    sorted_lb = sorted(unsorted, key=lambda tup: tup[1], reverse=True)
+    sorted_lb_dict = {username: score for username, score in sorted_lb}
+    return sorted_lb_dict
+
+
+def get_leaderboard_both_sides():
+    data = _load_data(DATABASEFILE)
+    side_scores = {}
+    for entry in data.values():
+        for side in entry.sides_as_killer:
+            if side not in side_scores:
+                side_scores[side] = 1
+            else:
+                side_scores[side] += 1
+    unsorted = [(wpn_name, wpn_kills) for wpn_name, wpn_kills in list(side_scores.items())]
+    sorted_lb = sorted(unsorted, key=lambda tup: tup[1], reverse=True)
     leaderboard = dict(sorted_lb)
     return leaderboard
