@@ -23,12 +23,15 @@ def run():
             killer = get_user_data(killerName)
             killer.kills += 1
             killer.used_units.append(killerUnit)
-            killer.used_weapons.append(weapon)
+            if weapon != "":
+                killer.used_weapons.append(weapon)
             killer.sides_as_killer.append(killerSide)
 
             victim = get_user_data(victimName)
             victim.deaths += 1
 
+            killer.update_score()
+            victim.update_score()
             save_user_data(killer)
             save_user_data(victim)
 
