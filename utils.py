@@ -16,7 +16,7 @@ class Player:
         self.sides_as_killer = sides_as_killer
         self.ejections = ejections
         self._score = 0
-        self.kd = kills / deaths
+        self.kd = round(self.kills / self.deaths, 2) if self.deaths != 0 else self.kills
         self.takeoffs = 0
         self.landings = 0
 
@@ -26,7 +26,7 @@ class Player:
 
     def update_score(self):
         self._score = self.kills * 2 - self.deaths
-        self.kd = round(self.kills / self.deaths, 2)
+        self.kd = round(self.kills / self.deaths, 2) if self.deaths != 0 else self.kills
 
 
 def _load_data(filename):
@@ -89,3 +89,17 @@ def get_leaderboard_ejections(limit: int = 10):
     sorted_lb_dict = {username: killCount for username, killCount in sorted_lb}
     return sorted_lb_dict
 
+
+def get_leaderboard_weapons(limit: int = 10):
+    data = _load_data(DATABASEFILE)
+    weapon_scores = {}
+    for entry in data.values():
+        for weapon in entry.used_weapons:
+            if weapon not in weapon_scores:
+                weapon_scores[weapon] = 1
+            else:
+                weapon_scores[weapon] += 1
+    unsorted = [(wpn_name, wpn_kills) for wpn_name, wpn_kills in list(weapon_scores.items())[:limit]]
+    sorted_lb = sorted_lb = sorted(unsorted, key=lambda tup: tup[1], reverse=True)
+    leaderboard = dict(sorted_lb)
+    return leaderboard
