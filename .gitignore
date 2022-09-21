@@ -4,3 +4,4 @@ venv/*
 *.pkl
 *.pickle
 *.pickl
+faker.py
