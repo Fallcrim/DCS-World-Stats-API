@@ -42,6 +42,10 @@ async def return_leaderboard_data(leaderboard_name: str, limit: int):
 
         if leaderboard_name == "score":
             return get_leaderboard_score(limit)
+
+        if leaderboard_name == "planes":
+            return get_leaderboard_planes(limit)
+
     except Exception as e:
         return {"ERROR": e}
 

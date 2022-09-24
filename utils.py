@@ -148,3 +148,18 @@ def get_leaderboard_per_side(side: str, limit: int):
     unsorted = [(user[0], user[1]) for user in list(kill_scores.items())[:limit]]
     sorted_leaderboard = sorted(unsorted, key=lambda tup: tup[1], reverse=True)
     return dict(sorted_leaderboard)
+
+
+def get_leaderboard_planes(limit: int = 10):
+    data = _load_data(DATABASEFILE)
+    plane_scores = {}
+    for entry in data.values():
+        for plane in entry.used_units:
+            if plane not in plane_scores:
+                plane_scores[plane] = 1
+            else:
+                plane_scores[plane] += 1
+    unsorted = [(wpn_name, wpn_kills) for wpn_name, wpn_kills in list(plane_scores.items())[:limit]]
+    sorted_lb = sorted(unsorted, key=lambda tup: tup[1], reverse=True)
+    leaderboard = dict(sorted_lb)
+    return leaderboard
