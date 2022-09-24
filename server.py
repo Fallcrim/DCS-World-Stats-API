@@ -16,9 +16,9 @@ def run():
         if data.get("eventName") == "kill":
             killerName = data.get("killerPlayerName")
             killerUnit = data.get("killerUnitType")
-            killerSide = data.get("killerSide")
+            killerSide = "BLUE" if data.get("killerSide") == 2 else "RED" if data.get("killerSide") == 1 else "NEUTRAL"
             victimName = data.get("victimPlayerName")
-            weapon = data.get("killerWeapon")
+            weapon = data.get("killerWeapon") if data.get("killerWeapon") != "" else "UNKNOWN"
 
             killer = get_user_data(killerName)
             killer.kills += 1

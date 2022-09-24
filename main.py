@@ -24,25 +24,31 @@ async def return_player_data(player_name: str):
 
 @app.get("/leaderboards/{leaderboard_name}/{limit}")
 async def return_leaderboard_data(leaderboard_name: str, limit: int):
-    if leaderboard_name == "kills":
-        return get_leaderboard_kills(limit)
+    try:
+        if leaderboard_name == "kills":
+            return get_leaderboard_kills(limit)
 
-    if leaderboard_name == "ejections":
-        return get_leaderboard_ejections(limit)
+        if leaderboard_name == "ejections":
+            return get_leaderboard_ejections(limit)
 
-    if leaderboard_name == "deaths":
-        return get_leaderboard_deaths(limit)
+        if leaderboard_name == "deaths":
+            return get_leaderboard_deaths(limit)
 
-    if leaderboard_name == "weapons":
-        return get_leaderboard_weapons(limit)
+        if leaderboard_name == "weapons":
+            return get_leaderboard_weapons(limit)
 
-    if leaderboard_name == "kd":
-        return get_leaderboard_kd(limit)
+        if leaderboard_name == "kd":
+            return get_leaderboard_kd(limit)
 
-    if leaderboard_name == "score":
-        return get_leaderboard_score(limit)
+        if leaderboard_name == "score":
+            return get_leaderboard_score(limit)
+    except Exception as e:
+        return {"ERROR": e}
 
 
-@app.get("/sides")
-async def return_side_kills():
-    return get_leaderboard_both_sides()
+@app.get("/sides/{side}/{limit}")
+async def return_side_kills(side: str, limit: int):
+    if side.lower() == "both":
+        return get_leaderboard_both_sides()
+    else:
+        return get_leaderboard_per_side(side, limit)

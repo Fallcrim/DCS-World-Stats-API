@@ -38,8 +38,6 @@ def _load_data(filename):
 
 
 def get_user_data(username: str):
-    if username == "null":
-        return dict()
     data = _load_data(DATABASEFILE)
     user_data = data.get(username)
     if user_data is not None:
@@ -136,3 +134,17 @@ def get_leaderboard_both_sides():
     sorted_lb = sorted(unsorted, key=lambda tup: tup[1], reverse=True)
     leaderboard = dict(sorted_lb)
     return leaderboard
+
+
+def get_leaderboard_per_side(side: str, limit: int):
+    data = _load_data(DATABASEFILE)
+    kill_scores = {}
+    for entry in data.values():
+        for entry_side in entry.sides_as_killer:
+            if entry_side.upper() == side.upper():
+                if entry.name not in kill_scores:
+                    kill_scores[entry.name] = 0
+                kill_scores[entry.name] += 1
+    unsorted = [(user[0], user[1]) for user in list(kill_scores.items())[:limit]]
+    sorted_leaderboard = sorted(unsorted, key=lambda tup: tup[1], reverse=True)
+    return dict(sorted_leaderboard)
