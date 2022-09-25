@@ -159,7 +159,22 @@ def get_leaderboard_planes(limit: int = 10):
                 plane_scores[plane] = 1
             else:
                 plane_scores[plane] += 1
-    unsorted = [(wpn_name, wpn_kills) for wpn_name, wpn_kills in list(plane_scores.items())[:limit]]
+    unsorted = [(plane_name, plane_kills) for plane_name, plane_kills in list(plane_scores.items())[:limit]]
     sorted_lb = sorted(unsorted, key=lambda tup: tup[1], reverse=True)
     leaderboard = dict(sorted_lb)
     return leaderboard
+
+
+def setup_scripts():
+    cfg = load_config()
+    SERVER_PATH = cfg['DEFAULT'].get('SERVER_PATH')
+    if not os.path.exists(SERVER_PATH):
+        raise Exception("Server path invalid! Check your config file.")
+    if not os.path.exists(SERVER_PATH + "/Scripts/Hooks"):
+        if not os.path.exists(SERVER_PATH + "/Scripts"):
+            os.mkdir(SERVER_PATH + "/Scripts")
+        os.mkdir(SERVER_PATH + "/Scripts/Hooks")
+
+    with open(f"{SERVER_PATH}/Scripts/Hooks/statsAPICallbacks.lua", "w") as new_script_file:
+        with open("Hooks/APIcallbacks.lua", "r") as cp_file:
+            new_script_file.write(cp_file.read())
